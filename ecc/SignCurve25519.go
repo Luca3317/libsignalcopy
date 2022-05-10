@@ -4,9 +4,9 @@ package ecc
 // See https://moderncrypto.org/mail-archive/curves/2014/000205.html for details.
 
 import (
-	"crypto/ed25519"
-	"crypto/sha512"
 
+	"crypto/sha512"
+	"github.com/Luca3317/edwards25519copy"
 	"github.com/Luca3317/edwards25519copy/edwards25519"
 )
 
