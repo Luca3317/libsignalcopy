@@ -139,6 +139,94 @@ type Retrievable struct {
 	identityKeyPair *identity.KeyPair
 }
 
+type RetrievableRaw struct {
+	ids                 IDs
+	preKey              []byte
+	signedPreKey        []byte
+	identityKeyPairPub  []byte
+	identityKeyPairPriv []byte
+}
+
+func GenerateRetrievableRaw() *RetrievableRaw {
+
+	rr := &RetrievableRaw{}
+
+	// Write / read ids (works fully)
+	if _, err := os.Stat(idspath); errors.Is(err, os.ErrNotExist) {
+		rr.ids = IDs{
+			RegID: keyhelper.GenerateRegistrationID(),
+			DevID: 12,
+		}
+		writefile(IDsToGOB(rr.ids), idspath)
+
+	} else if err == nil {
+		var content []byte
+		readfile(&content, idspath)
+		rr.ids = IDsFromGOB(content)
+
+	} else {
+		log.Fatal("some other error occured when checking for ", idspath)
+	}
+
+	// Write / read prekey (works fully)
+	if _, err := os.Stat(prekeypath); errors.Is(err, os.ErrNotExist) {
+		prekeys, err := keyhelper.GeneratePreKeys(0, 10, serialize.NewJSONSerializer().PreKeyRecord)
+		if err != nil {
+			log.Fatal("failed to generate prekeys")
+		}
+
+		rr.preKey = prekeys[0].Serialize()
+		writefile(rr.preKey, prekeypath)
+
+	} else if err == nil {
+		readfile(&rr.preKey, prekeypath)
+	} else {
+		log.Fatalf("some other error occured when checking for %v", prekeypath)
+	}
+
+	// Write / read id keys (appears to work, but needs testing)
+	if _, err := os.Stat(idkeypubpath); errors.Is(err, os.ErrNotExist) {
+		var pub, priv [32]byte
+		pub, priv = CreateIdentityKeyPairBase()
+
+		rr.identityKeyPairPub = pub[:]
+		rr.identityKeyPairPriv = priv[:]
+
+		writefile(rr.identityKeyPairPub, idkeypubpath)
+		writefile(rr.identityKeyPairPriv, idkeyprivpath)
+
+	} else if err == nil {
+		readfile(&rr.identityKeyPairPub, idkeypubpath)
+		readfile(&rr.identityKeyPairPriv, idkeyprivpath)
+
+	} else {
+		log.Fatal("some other error occured when checking for ", idkeypubpath)
+	}
+
+	var pubfix, privfix [32]byte
+	copy(pubfix[:], rr.identityKeyPairPub)
+	copy(privfix[:], rr.identityKeyPairPriv)
+	idkeypair := CreateIdentityKeyPair(pubfix, privfix)
+
+	// Write / read signed pre key
+	if _, err := os.Stat(sigprekeypath); errors.Is(err, os.ErrNotExist) {
+		signedPreKey, err := keyhelper.GenerateSignedPreKey(idkeypair, 0, serialize.NewJSONSerializer().SignedPreKeyRecord)
+		if err != nil {
+			log.Fatal("failed to generate pre keys")
+		}
+
+		rr.signedPreKey = signedPreKey.Serialize()
+		writefile(rr.signedPreKey, sigprekeypath)
+
+	} else if err == nil {
+		readfile(&rr.signedPreKey, sigprekeypath)
+	} else {
+		log.Fatal("some other error occured when checking for ", sigprekeypath)
+	}
+
+	return rr
+}
+
 func GenerateRetrievable() *Retrievable {
 
 	rk := &Retrievable{}
