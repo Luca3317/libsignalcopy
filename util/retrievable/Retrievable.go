@@ -141,7 +141,7 @@ type Retrievable struct {
 
 type RetrievableRaw struct {
 	Ids                 IDs
-	Prekey              []byte
+	PreKey              []byte
 	SignedPreKey        []byte
 	IdentityKeyPairPub  []byte
 	IdentityKeyPairPriv []byte
@@ -153,16 +153,16 @@ func GenerateRetrievableRaw() *RetrievableRaw {
 
 	// Write / read ids (works fully)
 	if _, err := os.Stat(idspath); errors.Is(err, os.ErrNotExist) {
-		rr.ids = IDs{
+		rr.Ids = IDs{
 			RegID: keyhelper.GenerateRegistrationID(),
 			DevID: 12,
 		}
-		writefile(IDsToGOB(rr.ids), idspath)
+		writefile(IDsToGOB(rr.Ids), idspath)
 
 	} else if err == nil {
 		var content []byte
 		readfile(&content, idspath)
-		rr.ids = IDsFromGOB(content)
+		rr.Ids = IDsFromGOB(content)
 
 	} else {
 		log.Fatal("some other error occured when checking for ", idspath)
@@ -175,11 +175,11 @@ func GenerateRetrievableRaw() *RetrievableRaw {
 			log.Fatal("failed to generate prekeys")
 		}
 
-		rr.preKey = prekeys[0].Serialize()
-		writefile(rr.preKey, prekeypath)
+		rr.PreKey = prekeys[0].Serialize()
+		writefile(rr.PreKey, prekeypath)
 
 	} else if err == nil {
-		readfile(&rr.preKey, prekeypath)
+		readfile(&rr.PreKey, prekeypath)
 	} else {
 		log.Fatalf("some other error occured when checking for %v", prekeypath)
 	}
@@ -189,23 +189,23 @@ func GenerateRetrievableRaw() *RetrievableRaw {
 		var pub, priv [32]byte
 		pub, priv = CreateIdentityKeyPairBase()
 
-		rr.identityKeyPairPub = pub[:]
-		rr.identityKeyPairPriv = priv[:]
+		rr.IdentityKeyPairPub = pub[:]
+		rr.IdentityKeyPairPriv = priv[:]
 
-		writefile(rr.identityKeyPairPub, idkeypubpath)
-		writefile(rr.identityKeyPairPriv, idkeyprivpath)
+		writefile(rr.IdentityKeyPairPub, idkeypubpath)
+		writefile(rr.IdentityKeyPairPriv, idkeyprivpath)
 
 	} else if err == nil {
-		readfile(&rr.identityKeyPairPub, idkeypubpath)
-		readfile(&rr.identityKeyPairPriv, idkeyprivpath)
+		readfile(&rr.IdentityKeyPairPub, idkeypubpath)
+		readfile(&rr.IdentityKeyPairPriv, idkeyprivpath)
 
 	} else {
 		log.Fatal("some other error occured when checking for ", idkeypubpath)
 	}
 
 	var pubfix, privfix [32]byte
-	copy(pubfix[:], rr.identityKeyPairPub)
-	copy(privfix[:], rr.identityKeyPairPriv)
+	copy(pubfix[:], rr.IdentityKeyPairPub)
+	copy(privfix[:], rr.IdentityKeyPairPriv)
 	idkeypair := CreateIdentityKeyPair(pubfix, privfix)
 
 	// Write / read signed pre key
@@ -215,11 +215,11 @@ func GenerateRetrievableRaw() *RetrievableRaw {
 			log.Fatal("failed to generate pre keys")
 		}
 
-		rr.signedPreKey = signedPreKey.Serialize()
-		writefile(rr.signedPreKey, sigprekeypath)
+		rr.SignedPreKey = signedPreKey.Serialize()
+		writefile(rr.SignedPreKey, sigprekeypath)
 
 	} else if err == nil {
-		readfile(&rr.signedPreKey, sigprekeypath)
+		readfile(&rr.SignedPreKey, sigprekeypath)
 	} else {
 		log.Fatal("some other error occured when checking for ", sigprekeypath)
 	}
@@ -233,17 +233,17 @@ func GenerateRetrievable() *Retrievable {
 
 	// Write / read ids (works fully)
 	if _, err := os.Stat(idspath); errors.Is(err, os.ErrNotExist) {
-		rk.ids = IDs{
+		rk.Ids = IDs{
 			RegID: keyhelper.GenerateRegistrationID(),
 			DevID: 12,
 		}
 
-		writefile(IDsToGOB(rk.ids), idspath)
+		writefile(IDsToGOB(rk.Ids), idspath)
 
 	} else if err == nil {
 		var content []byte
 		readfile(&content, idspath)
-		rk.ids = IDsFromGOB(content)
+		rk.Ids = IDsFromGOB(content)
 
 	} else {
 		log.Fatal("some other error occured when checking for ", idspath)
@@ -256,13 +256,13 @@ func GenerateRetrievable() *Retrievable {
 			log.Fatal("failed to generate prekeys")
 		}
 
-		rk.preKey = prekeys[0]
-		writefile(rk.preKey.Serialize(), prekeypath)
+		rk.PreKey = prekeys[0]
+		writefile(rk.PreKey.Serialize(), prekeypath)
 
 	} else if err == nil {
 		var content []byte
 		readfile(&content, prekeypath)
-		rk.preKey, err = record.NewPreKeyFromBytes(content, serialize.NewJSONSerializer().PreKeyRecord)
+		rk.PreKey, err = record.NewPreKeyFromBytes(content, serialize.NewJSONSerializer().PreKeyRecord)
 		if err != nil {
 			log.Fatal("failed to generate prekey")
 		}
@@ -280,7 +280,7 @@ func GenerateRetrievable() *Retrievable {
 		writefile(pub[:], idkeypubpath)
 		writefile(priv[:], idkeyprivpath)
 
-		rk.identityKeyPair = CreateIdentityKeyPair(pub, priv)
+		rk.IdentityKeyPair = CreateIdentityKeyPair(pub, priv)
 		/*
 			identityKeyPair, err = keyhelper.GenerateIdentityKeyPair()
 			if err != nil {
@@ -307,7 +307,7 @@ func GenerateRetrievable() *Retrievable {
 
 		//		rk.identityKeyPair = CreateIdentityKeyPair(*(*[32]byte)(pubkey), *(*[32]byte)(privkey))
 
-		rk.identityKeyPair = CreateIdentityKeyPair(fixpub, fixpriv)
+		rk.IdentityKeyPair = CreateIdentityKeyPair(fixpub, fixpriv)
 
 	} else {
 		log.Fatal("some other error occured when checking for ", idkeypubpath)
@@ -315,17 +315,17 @@ func GenerateRetrievable() *Retrievable {
 
 	// Write / read signed pre key
 	if _, err := os.Stat(sigprekeypath); errors.Is(err, os.ErrNotExist) {
-		rk.signedPreKey, err = keyhelper.GenerateSignedPreKey(rk.identityKeyPair, 0, serialize.NewJSONSerializer().SignedPreKeyRecord)
+		rk.SignedPreKey, err = keyhelper.GenerateSignedPreKey(rk.IdentityKeyPair, 0, serialize.NewJSONSerializer().SignedPreKeyRecord)
 		if err != nil {
 			log.Fatal("failed to generate pre keys")
 		}
 
-		writefile(rk.signedPreKey.Serialize(), sigprekeypath)
+		writefile(rk.SignedPreKey.Serialize(), sigprekeypath)
 
 	} else if err == nil {
 		var content []byte
 		readfile(&content, sigprekeypath)
-		rk.signedPreKey, err = record.NewSignedPreKeyFromBytes(content, serialize.NewJSONSerializer().SignedPreKeyRecord)
+		rk.SignedPreKey, err = record.NewSignedPreKeyFromBytes(content, serialize.NewJSONSerializer().SignedPreKeyRecord)
 		if err != nil {
 			log.Fatal("failed to generate signed pre key from bytes")
 		}
@@ -336,15 +336,15 @@ func GenerateRetrievable() *Retrievable {
 
 	// Print all created keys and ids
 	fmt.Printf("\n\n\n")
-	fmt.Print("Reg ID: ", rk.ids.RegID, "\n")
-	fmt.Print("Dev ID: ", rk.ids.DevID, "\n\n")
+	fmt.Print("Reg ID: ", rk.Ids.RegID, "\n")
+	fmt.Print("Dev ID: ", rk.Ids.DevID, "\n\n")
 
-	fmt.Print("PreKey: ", rk.preKey.Serialize(), "\n\n")
+	fmt.Print("PreKey: ", rk.PreKey.Serialize(), "\n\n")
 
-	fmt.Print("IDKey Public: ", rk.identityKeyPair.PublicKey().Serialize(), "\n")
-	fmt.Print("IDKey Private: ", rk.identityKeyPair.PrivateKey().Serialize(), "\n\n")
+	fmt.Print("IDKey Public: ", rk.IdentityKeyPair.PublicKey().Serialize(), "\n")
+	fmt.Print("IDKey Private: ", rk.IdentityKeyPair.PrivateKey().Serialize(), "\n\n")
 
-	fmt.Print("Signed PreKey: ", rk.signedPreKey.Serialize(), "\n")
+	fmt.Print("Signed PreKey: ", rk.SignedPreKey.Serialize(), "\n")
 
 	return rk
 }
