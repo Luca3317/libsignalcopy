@@ -133,18 +133,18 @@ func InitGOB() {
 
 // change name
 type Retrievable struct {
-	ids             IDs
-	preKey          *record.PreKey
-	signedPreKey    *record.SignedPreKey
-	identityKeyPair *identity.KeyPair
+	Ids             IDs
+	PreKey          *record.PreKey
+	SignedPreKey    *record.SignedPreKey
+	IdentityKeyPair *identity.KeyPair
 }
 
 type RetrievableRaw struct {
-	ids                 IDs
-	preKey              []byte
-	signedPreKey        []byte
-	identityKeyPairPub  []byte
-	identityKeyPairPriv []byte
+	Ids                 IDs
+	Prekey              []byte
+	SignedPreKey        []byte
+	IdentityKeyPairPub  []byte
+	IdentityKeyPairPriv []byte
 }
 
 func GenerateRetrievableRaw() *RetrievableRaw {
