@@ -6,7 +6,7 @@ package ecc
 import (
 
 	"crypto/sha512"
-	"github.com/Luca3317/edwards25519copy"
+	edcopy "github.com/Luca3317/edwards25519copy"
 	"github.com/Luca3317/edwards25519copy/edwards25519"
 )
 
@@ -94,5 +94,5 @@ func verify(publicKey [32]byte, message []byte, signature *[64]byte) bool {
 	A_ed[31] |= signature[63] & 0x80
 	signature[63] &= 0x7F
 
-	return ed25519.Verify(&A_ed, message, signature)
+	return edcopy.Verify(&A_ed, message, signature)
 }
