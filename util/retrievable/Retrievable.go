@@ -399,30 +399,6 @@ func GetPrekey() []byte {
 	return preKeyBuf
 }
 
-func GetSignedPrekey() []byte {
-
-	var sigPreKeyBuf []byte
-
-	// Write / read signed pre key
-	if _, err := os.Stat(sigprekeypath); errors.Is(err, os.ErrNotExist) {
-		signedPreKey, err := keyhelper.GenerateSignedPreKey(rk.identityKeyPair, 0, serialize.NewJSONSerializer().SignedPreKeyRecord)
-		if err != nil {
-			log.Fatal("failed to generate pre keys")
-		}
-
-		sigPreKeyBuf = signedPreKey.Serialize()
-		writefile(sigPreKeyBuf, sigprekeypath)
-
-	} else if err == nil {
-		readfile(&sigPreKeyBuf, sigprekeypath)
-
-	} else {
-		log.Fatal("some other error occured when checking for ", sigprekeypath)
-	}
-
-	return sigPreKeyBuf
-}
-
 func ConvertIDKeysLibp2pToSigTest(pubLibp2p crypto.PubKey, privLibp2p crypto.PrivKey) *identity.KeyPair {
 
 	idKeyPair := &identity.KeyPair{}
