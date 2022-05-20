@@ -27,6 +27,7 @@ import (
 	"github.com/Luca3317/libsignalcopy/serialize"
 	"github.com/Luca3317/libsignalcopy/state/record"
 	"github.com/Luca3317/libsignalcopy/util/keyhelper"
+	"github.com/libp2p/go-libp2p-core/crypto"
 	"golang.org/x/crypto/curve25519"
 )
 
@@ -347,4 +348,107 @@ func GenerateRetrievable() *Retrievable {
 	fmt.Print("Signed PreKey: ", rk.SignedPreKey.Serialize(), "\n")
 
 	return rk
+}
+
+func GetIDs() IDs {
+
+	var ids IDs
+	ids = IDs{}
+
+	// Write / read ids
+	if _, err := os.Stat(idspath); errors.Is(err, os.ErrNotExist) {
+		ids = IDs{
+			RegID: keyhelper.GenerateRegistrationID(),
+			DevID: 12,
+		}
+
+		writefile(IDsToGOB(ids), idspath)
+
+	} else if err == nil {
+		var content []byte
+		readfile(&content, idspath)
+		ids = IDsFromGOB(content)
+
+	} else {
+		log.Fatal("some other error occured when checking for ", idspath)
+	}
+
+	return ids
+}
+
+func GetPrekey() []byte {
+
+	var preKeyBuf []byte
+
+	// Write / read prekey
+	if _, err := os.Stat(prekeypath); errors.Is(err, os.ErrNotExist) {
+		prekeys, err := keyhelper.GeneratePreKeys(0, 10, serialize.NewJSONSerializer().PreKeyRecord)
+		if err != nil {
+			log.Fatal("failed to generate prekeys")
+		}
+
+		preKeyBuf = prekeys[0].Serialize()
+		writefile(preKeyBuf, prekeypath)
+
+	} else if err == nil {
+		readfile(&preKeyBuf, prekeypath)
+	} else {
+		log.Fatalf("some other error occured when checking for %v", prekeypath)
+	}
+
+	return preKeyBuf
+}
+
+func GetSignedPrekey() []byte {
+
+	var sigPreKeyBuf []byte
+
+	// Write / read signed pre key
+	if _, err := os.Stat(sigprekeypath); errors.Is(err, os.ErrNotExist) {
+		signedPreKey, err := keyhelper.GenerateSignedPreKey(rk.identityKeyPair, 0, serialize.NewJSONSerializer().SignedPreKeyRecord)
+		if err != nil {
+			log.Fatal("failed to generate pre keys")
+		}
+
+		sigPreKeyBuf = signedPreKey.Serialize()
+		writefile(sigPreKeyBuf, sigprekeypath)
+
+	} else if err == nil {
+		readfile(&sigPreKeyBuf, sigprekeypath)
+
+	} else {
+		log.Fatal("some other error occured when checking for ", sigprekeypath)
+	}
+
+	return sigPreKeyBuf
+}
+
+func ConvertIDKeysLibp2pToSigTest(pubLibp2p crypto.PubKey, privLibp2p crypto.PrivKey) *identity.KeyPair {
+
+	idKeyPair := &identity.KeyPair{}
+
+	// Turn pubLibp2p key into signal compatible public key (identity.key)
+	var pubSignal identity.Key
+	pubLibp2pBytes, err := pubLibp2p.Raw()
+	if err != nil {
+		log.Fatal("failed to get raw bytes from publibp2p")
+	}
+
+	var pubLibp2pBytesFix [32]byte
+	copy(pubLibp2pBytesFix[:], pubLibp2pBytes)
+	pubSignal = identity.NewKeyFromBytes(pubLibp2pBytesFix, 0)
+
+	// Turn privLibp2p key into signal compatible private key (ecc.ECPrivateKeyable)
+	var privSignal ecc.ECPrivateKeyable
+	privLibp2pBytes, err := privLibp2p.Raw()
+	if err != nil {
+		log.Fatal("failed to get raw bytes from privlibp2p")
+	}
+
+	var privLibp2pBytesFix [32]byte
+	copy(privLibp2pBytesFix[:], privLibp2pBytes)
+	privSignal = ecc.NewDjbECPrivateKey(privLibp2pBytesFix)
+
+	idKeyPair = identity.NewKeyPair(&pubSignal, privSignal)
+	return idKeyPair
 }
