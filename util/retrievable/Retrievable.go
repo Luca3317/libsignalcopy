@@ -1,5 +1,9 @@
 package retrievable
 
+// TODO
+// CreateBundle/ReadBundle
+// maybe marshaled25519 instead of the generic marshalling
+
 import (
 	"bytes"
 	"encoding/gob"
