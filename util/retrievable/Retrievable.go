@@ -37,8 +37,6 @@ func writefile(content []byte, path string) {
 	if err != nil {
 		log.Fatalf("FAILED TO WRITE TO FILE %v", path)
 		os.Remove(path)
-	} else {
-		fmt.Printf("\nSUCCESS WRITING TO %v:\n%v\n", path, content)
 	}
 }
 
@@ -50,8 +48,6 @@ func readfile(content *[]byte, path string) {
 	if err != nil {
 		log.Fatalf("FAILED TO READ FROM FILE %v", path)
 		*content = nil
-	} else {
-		fmt.Printf("\nSUCCESS READING FROM FILE %v:\n%v\n", path, *content)
 	}
 }
 
