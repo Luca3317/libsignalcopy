@@ -84,11 +84,11 @@ func InitGOB() {
 }
 
 type RetrievableRaw struct {
-	ids                 IDs
-	preKey              []byte
-	signedPreKey        []byte
-	identityKeyPairPub  []byte
-	identityKeyPairPriv []byte
+	Ids                 IDs
+	PreKey              []byte
+	SignedPreKey        []byte
+	IdentityKeyPairPub  []byte
+	IdentityKeyPairPriv []byte
 }
 
 // TODO dont hardcode devid
@@ -128,11 +128,11 @@ func CreateSignedPreKey(idKeyPair *identity.KeyPair) []byte {
 func CreateBundle(pubLibp2p crypto.PubKey, privLibp2p crypto.PrivKey) RetrievableRaw {
 	pub, priv := SaveIDKeyPair(pubLibp2p, privLibp2p)
 	return RetrievableRaw{
-		ids:                 CreateIDs(),
-		preKey:              CreatePreKey(),
-		identityKeyPairPub:  pub,
-		identityKeyPairPriv: priv,
-		signedPreKey:        CreateSignedPreKey(ConvertIDKeysLibp2pToSig(pubLibp2p, privLibp2p)),
+		Ids:                 CreateIDs(),
+		PreKey:              CreatePreKey(),
+		IdentityKeyPairPub:  pub,
+		IdentityKeyPairPriv: priv,
+		SignedPreKey:        CreateSignedPreKey(ConvertIDKeysLibp2pToSig(pubLibp2p, privLibp2p)),
 	}
 }
 
@@ -202,11 +202,11 @@ func ReadBundle() RetrievableRaw {
 	pub, priv := ReadIDKeyPair()
 
 	return RetrievableRaw{
-		ids:                 ReadIDs(),
-		preKey:              ReadPreKey(),
-		identityKeyPairPub:  pub,
-		identityKeyPairPriv: priv,
-		signedPreKey:        ReadSignedPreKey(),
+		Ids:                 ReadIDs(),
+		PreKey:              ReadPreKey(),
+		IdentityKeyPairPub:  pub,
+		IdentityKeyPairPriv: priv,
+		SignedPreKey:        ReadSignedPreKey(),
 	}
 }
 
