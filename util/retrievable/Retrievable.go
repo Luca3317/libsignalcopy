@@ -93,10 +93,11 @@ type RetrievableRaw struct {
 }
 
 type Retrievable struct {
-	Ids             IDs
-	PreKey          record.PreKey
-	SignedPreKey    record.SignedPreKey
-	IdentityKeyPair identity.KeyPair
+	Ids                 IDs
+	PreKey              record.PreKey
+	SignedPreKey        record.SignedPreKey
+	IdentityKeyPairPub  crypto.PubKey
+	IdentityKeyPairPriv crypto.PrivKey
 }
 
 // TODO dont hardcode devid
