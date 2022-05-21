@@ -16,6 +16,7 @@ import (
 	"github.com/Luca3317/libsignalcopy/ecc"
 	"github.com/Luca3317/libsignalcopy/keys/identity"
 	"github.com/Luca3317/libsignalcopy/serialize"
+	"github.com/Luca3317/libsignalcopy/state/record"
 	"github.com/Luca3317/libsignalcopy/util/keyhelper"
 	"github.com/libp2p/go-libp2p-core/crypto"
 )
@@ -89,6 +90,13 @@ type RetrievableRaw struct {
 	SignedPreKey        []byte
 	IdentityKeyPairPub  []byte
 	IdentityKeyPairPriv []byte
+}
+
+type Retrievable struct {
+	Ids             IDs
+	PreKey          record.PreKey
+	SignedPreKey    record.SignedPreKey
+	IdentityKeyPair identity.KeyPair
 }
 
 // TODO dont hardcode devid
