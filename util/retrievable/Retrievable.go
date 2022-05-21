@@ -125,6 +125,17 @@ func CreateSignedPreKey(idKeyPair *identity.KeyPair) []byte {
 	return signedPreKeyBytes
 }
 
+func CreateBundle(pubLibp2p crypto.PubKey, privLibp2p crypto.PrivKey) RetrievableRaw {
+	pub, priv := SaveIDKeyPair(pubLibp2p, privLibp2p)
+	return RetrievableRaw{
+		ids:                 CreateIDs(),
+		preKey:              CreatePreKey(),
+		identityKeyPairPub:  pub,
+		identityKeyPairPriv: priv,
+		signedPreKey:        CreateSignedPreKey(ConvertIDKeysLibp2pToSig(pubLibp2p, privLibp2p)),
+	}
+}
+
 // ID keypairs are handled differently; The go implementations are saved / read
 // To get Signal compatible, equivalent keys, use ConvertIDKeysLibp2pToSig
 func SaveIDKeyPair(pubLibp2p crypto.PubKey, privLibp2p crypto.PrivKey) (pubBytes []byte, privBytes []byte) {
@@ -185,6 +196,18 @@ func ReadIDKeyPair() (pubBytes []byte, privBytes []byte) {
 	readfile(&privBytes, idkeyprivpath)
 
 	return pubBytes, privBytes
+}
+
+func ReadBundle() RetrievableRaw {
+	pub, priv := ReadIDKeyPair()
+
+	return RetrievableRaw{
+		ids:                 ReadIDs(),
+		preKey:              ReadPreKey(),
+		identityKeyPairPub:  pub,
+		identityKeyPairPriv: priv,
+		signedPreKey:        ReadSignedPreKey(),
+	}
 }
 
 func ConvertIDKeysLibp2pToSig(pubLibp2p crypto.PubKey, privLibp2p crypto.PrivKey) *identity.KeyPair {
