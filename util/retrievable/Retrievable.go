@@ -119,7 +119,12 @@ func CreatePreKey() []byte {
 		log.Fatal("failed to generate prekeys")
 	}
 
-	preKeyBytes := preKeys[0].Serialize()
+	//preKeyBytes := preKeys[0].Serialize()
+	preKeyBytes := serialize.NewJSONSerializer().PreKeyRecord.Serialize(&record.PreKeyStructure{
+		ID:         prekey.ID().Value,
+		PublicKey:  prekey.KeyPair().PublicKey(),
+		PrivateKey: prekey.KeyPair().PrivateKey(),
+	})
 	writefile(preKeyBytes, prekeypath)
 
 	logger.Debug("Generated PreKey: ", preKeyBytes, "\nID: ", preKeys[0].ID(),
