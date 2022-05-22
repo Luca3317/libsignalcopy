@@ -15,6 +15,7 @@ import (
 
 	"github.com/Luca3317/libsignalcopy/ecc"
 	"github.com/Luca3317/libsignalcopy/keys/identity"
+	"github.com/Luca3317/libsignalcopy/logger"
 	"github.com/Luca3317/libsignalcopy/serialize"
 	"github.com/Luca3317/libsignalcopy/state/record"
 	"github.com/Luca3317/libsignalcopy/util/keyhelper"
@@ -120,6 +121,11 @@ func CreatePreKey() []byte {
 
 	preKeyBytes := preKeys[0].Serialize()
 	writefile(preKeyBytes, prekeypath)
+
+	logger.Debug("Generated PreKey: ", preKeyBytes, "\nID: ", preKeys[0].ID(),
+		"\nPublicKey: ", preKeys[0].KeyPair().PublicKey().Serialize(),
+		"\nPrivateKey: ", preKeys[0].KeyPair().PrivateKey().Serialize())
+
 	return preKeyBytes
 }
 
@@ -131,6 +137,11 @@ func CreateSignedPreKey(idKeyPair *identity.KeyPair) []byte {
 
 	signedPreKeyBytes := signedPreKey.Serialize()
 	writefile(signedPreKeyBytes, sigprekeypath)
+
+	logger.Debug("Generated PreKey: ", signedPreKeyBytes, "\nID: ", signedPreKey.ID(),
+		"\nPublicKey: ", signedPreKey.KeyPair().PublicKey().Serialize(),
+		"\nPrivateKey: ", signedPreKey.KeyPair().PrivateKey().Serialize())
+
 	return signedPreKeyBytes
 }
 
