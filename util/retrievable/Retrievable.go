@@ -120,10 +120,11 @@ func CreatePreKey() []byte {
 	}
 
 	//preKeyBytes := preKeys[0].Serialize()
+
 	preKeyBytes := serialize.NewJSONSerializer().PreKeyRecord.Serialize(&record.PreKeyStructure{
-		ID:         prekey.ID().Value,
-		PublicKey:  prekey.KeyPair().PublicKey(),
-		PrivateKey: prekey.KeyPair().PrivateKey(),
+		ID:         preKeys[0].ID().Value,
+		PublicKey:  preKeys[0].KeyPair().PublicKey().Serialize(),
+		PrivateKey: bytehelperpreKeys[0].KeyPair().PrivateKey().Serialize(),
 	})
 	writefile(preKeyBytes, prekeypath)
 
