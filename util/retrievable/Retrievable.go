@@ -158,8 +158,8 @@ func CreatePreKeyRaw() []byte {
 	writefile(preKeyBytes, prekeypath)
 
 	logger.Debug("Generated PreKey: ", preKeyBytes, "\nID: ", preKeys[0].ID(),
-		"\nPublicKey: ", preKeys[0].KeyPair().PublicKey(),
-		"\nPrivateKey: ", preKeys[0].KeyPair().PrivateKey())
+		"\nPublicKey: ", preKeys[0].KeyPair().PublicKey().Serialize(),
+		"\nPrivateKey: ", preKeys[0].KeyPair().PrivateKey().Serialize())
 
 	return preKeyBytes
 }
