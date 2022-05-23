@@ -215,7 +215,7 @@ func ReadSignedPreKeyRaw() []byte {
 }
 
 func ReadBundleRaw() RetrievableRaw {
-	pub, priv := ReadIDKeyPair()
+	pub, priv := ReadIDKeyPairRaw()
 
 	return RetrievableRaw{
 		Ids:                 ReadIDs(),
