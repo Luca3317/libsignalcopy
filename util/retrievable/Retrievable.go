@@ -18,7 +18,6 @@ import (
 	"github.com/Luca3317/libsignalcopy/logger"
 	"github.com/Luca3317/libsignalcopy/serialize"
 	"github.com/Luca3317/libsignalcopy/state/record"
-	"github.com/Luca3317/libsignalcopy/util/bytehelper"
 	"github.com/Luca3317/libsignalcopy/util/keyhelper"
 	"github.com/libp2p/go-libp2p-core/crypto"
 )
@@ -120,18 +119,12 @@ func CreatePreKey() []byte {
 		log.Fatal("failed to generate prekeys")
 	}
 
-	//preKeyBytes := preKeys[0].Serialize()
-
-	preKeyBytes := serialize.NewJSONSerializer().PreKeyRecord.Serialize(&record.PreKeyStructure{
-		ID:         preKeys[0].ID().Value,
-		PublicKey:  preKeys[0].KeyPair().PublicKey().Serialize(),
-		PrivateKey: bytehelper.ArrayToSlice(preKeys[0].KeyPair().PrivateKey().Serialize()),
-	})
+	preKeyBytes := preKeys[0].Serialize()
 	writefile(preKeyBytes, prekeypath)
 
 	logger.Debug("Generated PreKey: ", preKeyBytes, "\nID: ", preKeys[0].ID(),
-		"\nPublicKey: ", preKeys[0].KeyPair().PublicKey().Serialize(),
-		"\nPrivateKey: ", preKeys[0].KeyPair().PrivateKey().Serialize())
+		"\nPublicKey: ", preKeys[0].KeyPair().PublicKey(),
+		"\nPrivateKey: ", preKeys[0].KeyPair().PrivateKey())
 
 	return preKeyBytes
 }
