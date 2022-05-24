@@ -34,7 +34,7 @@ func NewPreKeyFromStruct(structure *PreKeyStructure, serializer PreKeySerializer
 	}
 
 	// Generate the ECC key from bytes.
-	publicKey := ecc.NewDjbECPublicKey(bytehelper.SliceToArray(structure.PublicKey))
+	publicKey := ecc.NewDjbECPublicKey(bytehelper.SliceToArray(structure.PublicKey[1:]))
 	privateKey := ecc.NewDjbECPrivateKey(bytehelper.SliceToArray(structure.PrivateKey))
 	keyPair := ecc.NewECKeyPair(publicKey, privateKey)
 	preKey.keyPair = keyPair
