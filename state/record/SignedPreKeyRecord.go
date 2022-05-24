@@ -38,7 +38,7 @@ func NewSignedPreKeyFromStruct(structure *SignedPreKeyStructure,
 	}
 
 	// Generate the ECC key from bytes.
-	publicKey := ecc.NewDjbECPublicKey(bytehelper.SliceToArray(structure.PublicKey))
+	publicKey := ecc.NewDjbECPublicKey(bytehelper.SliceToArray(structure.PublicKey[1:]))
 	privateKey := ecc.NewDjbECPrivateKey(bytehelper.SliceToArray(structure.PrivateKey))
 	keyPair := ecc.NewECKeyPair(publicKey, privateKey)
 	signedPreKey.keyPair = keyPair
