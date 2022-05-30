@@ -15,6 +15,7 @@ import (
 	"github.com/Luca3317/libsignalcopy/state/record"
 	"github.com/Luca3317/libsignalcopy/util/bytehelper"
 	"github.com/Luca3317/libsignalcopy/util/keyhelper"
+	"github.com/libp2p/go-libp2p-core/crypto"
 )
 
 const idspath = "ids.bin"
@@ -24,6 +25,9 @@ const sigprekeypath = "sigprekey.bin"
 const idkeypairpath = "idkeypair.bin"
 const idkeypubpath = "idkeypub.bin"
 const idkeyprivpath = "idkeypriv.bin"
+
+const libp2pkeypubpath = "libp2pkeypub.bin"
+const libp2pkeyprivpath = "libp2pkeypriv.bin"
 
 type IDs struct {
 	RegID uint32
@@ -300,4 +304,48 @@ func ReadBundle() (Retrievable, error) {
 		SignedPreKey:    *signedprekey,
 		IdentityKeyPair: idkeypair,
 	}, nil
+}
+
+func SaveLibP2PKeys(pub crypto.PubKey, priv crypto.PrivKey) (pubBytes []byte, privBytes []byte, err error) {
+	pubBytes, err = crypto.MarshalPublicKey(pub)
+	if err != nil {
+		log.Fatal("Failed to marshal public key")
+		return nil, nil, err
+	}
+
+	privBytes, err = crypto.MarshalPrivateKey(priv)
+	if err != nil {
+		log.Fatal("Failed to marshal private key")
+		return nil, nil, err
+	}
+
+	err = writefile(pubBytes, libp2pkeypubpath)
+	if err != nil {
+		log.Fatal("Failed to write pubkey")
+		return nil, nil, err
+	}
+
+	err = writefile(privBytes, libp2pkeyprivpath)
+	if err != nil {
+		log.Fatal("Failed to write privkey")
+		return nil, nil, err
+	}
+
+	return pubBytes, privBytes, nil
+}
+
+func ReadLibP2PKeys() (pub []byte, priv []byte, err error) {
+	err = readfile(&pub, libp2pkeypubpath)
+	if err != nil {
+		log.Fatal("Failed to read pubkey")
+		return nil, nil, err
+	}
+
+	err = readfile(&priv, libp2pkeyprivpath)
+	if err != nil {
+		log.Fatal("Failed to write privkey")
+		return nil, nil, err
+	}
+
+	return pub, priv, nil
 }
