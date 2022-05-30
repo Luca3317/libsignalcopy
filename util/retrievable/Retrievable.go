@@ -306,7 +306,7 @@ func ReadBundle() (Retrievable, error) {
 	}, nil
 }
 
-func SaveLibP2PKeys(pub crypto.PubKey, priv crypto.PrivKey) (pubBytes []byte, privBytes []byte, err error) {
+/* func SaveLibP2PKeys(pub crypto.PubKey, priv crypto.PrivKey) (pubBytes []byte, privBytes []byte, err error) {
 	pubBytes, err = crypto.MarshalPublicKey(pub)
 	if err != nil {
 		log.Fatal("Failed to marshal public key")
@@ -348,4 +348,30 @@ func ReadLibP2PKeys() (pub []byte, priv []byte, err error) {
 	}
 
 	return pub, priv, nil
+} */
+func SaveLibP2PKey(pub crypto.PubKey) ([]byte, error) {
+	pubBytes, err := crypto.MarshalPublicKey(pub)
+	if err != nil {
+		log.Fatal("Failed to marshal public key")
+		return nil, err
+	}
+
+	err = writefile(pubBytes, libp2pkeypubpath)
+	if err != nil {
+		log.Fatal("Failed to write pubkey")
+		return nil, err
+	}
+
+	return pubBytes, nil
+}
+
+func ReadLibP2PKeys() ([]byte, error) {
+	var pub []byte
+	err := readfile(&pub, libp2pkeypubpath)
+	if err != nil {
+		log.Fatal("Failed to read pubkey")
+		return nil, err
+	}
+
+	return pub, nil
 }
