@@ -49,7 +49,7 @@ type Retrievable struct {
 	IdentityKeyPair identity.KeyPair
 }
 
-func writefile(content []byte, path string) error {
+func Writefile(content []byte, path string) error {
 
 	permissions := 0644
 	err := ioutil.WriteFile(path, content, fs.FileMode(permissions))
@@ -62,7 +62,7 @@ func writefile(content []byte, path string) error {
 	return nil
 }
 
-func readfile(content *[]byte, path string) error {
+func Readfile(content *[]byte, path string) error {
 
 	var err error
 	*content, err = ioutil.ReadFile(path)
