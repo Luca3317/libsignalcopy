@@ -110,7 +110,7 @@ func CreateIDs() IDs {
 	}
 
 	idBytes := IDsToGOB(ids)
-	writefile(idBytes, idspath)
+	Writefile(idBytes, idspath)
 	return ids
 }
 
@@ -120,7 +120,7 @@ func ReadIDs() IDs {
 	}
 
 	var idBytes []byte
-	readfile(&idBytes, idspath)
+	Readfile(&idBytes, idspath)
 	return IDsFromGOB(idBytes)
 }
 
@@ -131,7 +131,7 @@ func CreatePreKey() ([]byte, error) {
 	}
 
 	prekey := prekeys[0].Serialize()
-	err = writefile(prekey, prekeypath)
+	err = Writefile(prekey, prekeypath)
 	if err != nil {
 		return nil, err
 	}
@@ -141,7 +141,7 @@ func CreatePreKey() ([]byte, error) {
 
 func ReadPreKey() ([]byte, error) {
 	var prekey []byte
-	if err := readfile(&prekey, prekeypath); err != nil {
+	if err := Readfile(&prekey, prekeypath); err != nil {
 		return nil, err
 	}
 
@@ -155,7 +155,7 @@ func CreateSignedPreKey(idkeypair identity.KeyPair) ([]byte, error) {
 	}
 
 	signedprekeybytes := signedprekey.Serialize()
-	err = writefile(signedprekeybytes, sigprekeypath)
+	err = Writefile(signedprekeybytes, sigprekeypath)
 	if err != nil {
 		return nil, err
 	}
@@ -165,7 +165,7 @@ func CreateSignedPreKey(idkeypair identity.KeyPair) ([]byte, error) {
 
 func ReadSignedPreKey() ([]byte, error) {
 	var signedprekey []byte
-	if err := readfile(&signedprekey, sigprekeypath); err != nil {
+	if err := Readfile(&signedprekey, sigprekeypath); err != nil {
 		return nil, err
 	}
 
@@ -181,10 +181,10 @@ func CreateIdentityKeyPair() (pub []byte, priv []byte, err error) {
 	pub = idkeypair.PublicKey().Serialize()
 	priv = bytehelper.ArrayToSlice(idkeypair.PrivateKey().Serialize())
 
-	if err = writefile(pub, idkeypubpath); err != nil {
+	if err = Writefile(pub, idkeypubpath); err != nil {
 		return nil, nil, err
 	}
-	if err = writefile(priv, idkeyprivpath); err != nil {
+	if err = Writefile(priv, idkeyprivpath); err != nil {
 		return nil, nil, err
 	}
 
@@ -192,11 +192,11 @@ func CreateIdentityKeyPair() (pub []byte, priv []byte, err error) {
 }
 
 func ReadIdentityKeyPair() (pub []byte, priv []byte, err error) {
-	if err = readfile(&pub, idkeypubpath); err != nil {
+	if err = Readfile(&pub, idkeypubpath); err != nil {
 		return nil, nil, err
 	}
 
-	if err = readfile(&priv, idkeyprivpath); err != nil {
+	if err = Readfile(&priv, idkeyprivpath); err != nil {
 		return nil, nil, err
 	}
 
@@ -205,8 +205,8 @@ func ReadIdentityKeyPair() (pub []byte, priv []byte, err error) {
 
 func ReadIdentityKeyPair2() identity.KeyPair {
 	var pub, priv []byte
-	readfile(&pub, idkeypubpath)
-	readfile(&priv, idkeyprivpath)
+	Readfile(&pub, idkeypubpath)
+	Readfile(&priv, idkeyprivpath)
 
 	var readpubfix, readprivfix [32]byte
 	copy(readpubfix[:], pub[1:])
@@ -356,7 +356,7 @@ func SaveLibP2PKey(pub crypto.PubKey) ([]byte, error) {
 		return nil, err
 	}
 
-	err = writefile(pubBytes, libp2pkeypubpath)
+	err = Writefile(pubBytes, libp2pkeypubpath)
 	if err != nil {
 		log.Fatal("Failed to write pubkey")
 		return nil, err
@@ -367,7 +367,7 @@ func SaveLibP2PKey(pub crypto.PubKey) ([]byte, error) {
 
 func ReadLibP2PKeys() ([]byte, error) {
 	var pub []byte
-	err := readfile(&pub, libp2pkeypubpath)
+	err := Readfile(&pub, libp2pkeypubpath)
 	if err != nil {
 		log.Fatal("Failed to read pubkey")
 		return nil, err
