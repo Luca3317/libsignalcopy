@@ -12,7 +12,7 @@ import (
 	"github.com/Luca3317/libsignalcopy/util/bytehelper"
 )
 
-const macLength int = 8
+const MacLength int = 8
 
 // SignalMessageSerializer is an interface for serializing and deserializing
 // SignalMessages into bytes. An implementation of this interface should be
@@ -219,5 +219,5 @@ func getMac(messageVersion int, senderIdentityKey, receiverIdentityKey *identity
 
 	fullMac := mac.Sum(nil)
 
-	return bytehelper.Trim(fullMac, macLength), nil
+	return bytehelper.Trim(fullMac, MacLength), nil
 }
