@@ -174,9 +174,9 @@ func (s *SignalMessage) VerifyMac(messageVersion int, senderIdentityKey,
 	// the signal message structure.
 	theirMac := s.structure.Mac
 
-	logger.Debug("Verifying macs...")
-	logger.Debug("  Our MAC: ", ourMac)
-	logger.Debug("  Their MAC: ", theirMac)
+	//logger.Debug("Verifying macs...")
+	//logger.Debug("  Our MAC: ", ourMac)
+	//logger.Debug("  Their MAC: ", theirMac)
 
 	// Return an error if our calculated mac doesn't match the mac sent to us.
 	if !hmac.Equal(ourMac, theirMac) {
