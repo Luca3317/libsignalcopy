@@ -15,7 +15,6 @@ import (
 	"github.com/Luca3317/libsignalcopy/state/record"
 	"github.com/Luca3317/libsignalcopy/util/bytehelper"
 	"github.com/Luca3317/libsignalcopy/util/keyhelper"
-	"github.com/libp2p/go-libp2p-core/crypto"
 )
 
 const idspath = "ids.bin"
