@@ -31,7 +31,7 @@ func DecodePoint(bytes []byte, offset int) (ECPublicKeyable, error) {
 
 // GenerateKeyPair returns an EC Key Pair.
 func GenerateKeyPair() (*ECKeyPair, error) {
-	logger.Debug("Generating EC Key Pair...")
+	//logger.Debug("Generating EC Key Pair...")
 	// Get cryptographically secure random numbers.
 	random := rand.Reader
 
@@ -56,14 +56,14 @@ func GenerateKeyPair() (*ECKeyPair, error) {
 	djbECPriv := NewDjbECPrivateKey(private)
 	keypair := NewECKeyPair(djbECPub, djbECPriv)
 
-	logger.Debug("Returning keypair: ", keypair)
+	//logger.Debug("Returning keypair: ", keypair)
 
 	return keypair, nil
 }
 
 // VerifySignature verifies that the message was signed with the given key.
 func VerifySignature(signingKey ECPublicKeyable, message []byte, signature [64]byte) bool {
-	logger.Debug("Verifying signature of bytes: ", message)
+	//logger.Debug("Verifying signature of bytes: ", message)
 	publicKey := signingKey.PublicKey()
 	valid := verify(publicKey, message, &signature)
 	logger.Debug("Signature valid: ", valid)
@@ -85,7 +85,7 @@ func VerifySignatureAsync(signingKey ECPublicKeyable, message []byte, signature 
 
 // CalculateSignature signs a message with the given private key.
 func CalculateSignature(signingKey ECPrivateKeyable, message []byte) [64]byte {
-	logger.Debug("Signing bytes with signing key")
+	//logger.Debug("Signing bytes with signing key")
 	// Get cryptographically secure random numbers.
 	var random [64]byte
 	r := rand.Reader
