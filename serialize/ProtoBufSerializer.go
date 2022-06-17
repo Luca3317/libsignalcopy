@@ -122,7 +122,7 @@ func (j *ProtoBufPreKeySignalMessageSerializer) Serialize(signalMessage *protoco
 	}
 
 	serialized := append([]byte(strconv.Itoa(signalMessage.Version)), message...)
-	logger.Debug("Serialize PreKeySignalMessage result: ", serialized)
+	//logger.Debug("Serialize PreKeySignalMessage result: ", serialized)
 	return serialized
 }
 
@@ -175,7 +175,7 @@ func (j *ProtoBufSenderKeyDistributionMessageSerializer) Serialize(message *prot
 
 	version := strconv.Itoa(int(message.Version))
 	serialized = append([]byte(version), serialized...)
-	logger.Debug("Serialize result: ", serialized)
+	//logger.Debug("Serialize result: ", serialized)
 	return serialized
 }
 
@@ -227,7 +227,7 @@ func (j *ProtoBufSenderKeyMessageSerializer) Serialize(message *protocol.SenderK
 	if message.Signature != nil {
 		serialized = append(serialized, message.Signature...)
 	}
-	logger.Debug("Serialize result: ", serialized)
+	//logger.Debug("Serialize result: ", serialized)
 	return serialized
 }
 
