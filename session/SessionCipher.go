@@ -70,7 +70,7 @@ func (d *Cipher) Encrypt(plaintext []byte) (protocol.CiphertextMessage, error) {
 	sessionVersion := sessionState.Version()
 
 	ciphertextBody, err := encrypt(messageKeys, plaintext)
-	logger.Debug("Got ciphertextBody: ", ciphertextBody)
+	//logger.Debug("Got ciphertextBody: ", ciphertextBody)
 	if err != nil {
 		return nil, err
 	}
@@ -153,7 +153,7 @@ func (d *Cipher) DecryptAndGetKey(ciphertextMessage *protocol.SignalMessage) ([]
 // DecryptWithKey will decrypt the given message using the given symmetric key. This
 // can be used when decrypting messages at a later time if the message key was saved.
 func (d *Cipher) DecryptWithKey(ciphertextMessage *protocol.SignalMessage, key *message.Keys) ([]byte, error) {
-	logger.Debug("Decrypting ciphertext body: ", ciphertextMessage.Body())
+	//logger.Debug("Decrypting ciphertext body: ", ciphertextMessage.Body())
 	plaintext, err := decrypt(key, ciphertextMessage.Body())
 	if err != nil {
 		logger.Error("Unable to get plain text from ciphertext: ", err)
@@ -165,7 +165,7 @@ func (d *Cipher) DecryptWithKey(ciphertextMessage *protocol.SignalMessage, key *
 
 // DecryptWithRecord decrypts the given message using the given session record.
 func (d *Cipher) DecryptWithRecord(sessionRecord *record.Session, ciphertext *protocol.SignalMessage) ([]byte, *message.Keys, error) {
-	logger.Debug("Decrypting ciphertext with record: ", sessionRecord)
+	//logger.Debug("Decrypting ciphertext with record: ", sessionRecord)
 	previousStates := sessionRecord.PreviousSessionStates()
 	sessionState := sessionRecord.SessionState()
 
@@ -201,7 +201,7 @@ func (d *Cipher) DecryptWithRecord(sessionRecord *record.Session, ciphertext *pr
 
 // DecryptWithState decrypts the given message with the given session state.
 func (d *Cipher) DecryptWithState(sessionState *record.State, ciphertextMessage *protocol.SignalMessage) ([]byte, *message.Keys, error) {
-	logger.Debug("Decrypting ciphertext with session state: ", sessionState)
+	//logger.Debug("Decrypting ciphertext with session state: ", sessionState)
 	if !sessionState.HasSenderChain() {
 		err := "Uninitialized session!"
 		logger.Error("Unable to decrypt message with state: ", err)
@@ -316,14 +316,14 @@ func getOrCreateChainKey(sessionState *record.State, theirEphemeral ecc.ECPublic
 // decrypt will use the given message keys and ciphertext and return
 // the plaintext bytes.
 func decrypt(keys *message.Keys, body []byte) ([]byte, error) {
-	logger.Debug("Using cipherKey: ", keys.CipherKey())
+	//logger.Debug("Using cipherKey: ", keys.CipherKey())
 	return cipher.Decrypt(keys.Iv(), keys.CipherKey(), bytehelper.CopySlice(body))
 }
 
 // encrypt will use the given cipher, message keys, and plaintext bytes
 // and return ciphertext bytes.
 func encrypt(messageKeys *message.Keys, plaintext []byte) ([]byte, error) {
-	logger.Debug("Using cipherKey: ", messageKeys.CipherKey())
+	//logger.Debug("Using cipherKey: ", messageKeys.CipherKey())
 	return cipher.Encrypt(messageKeys.Iv(), messageKeys.CipherKey(), plaintext)
 }
 
