@@ -66,7 +66,7 @@ func VerifySignature(signingKey ECPublicKeyable, message []byte, signature [64]b
 	//logger.Debug("Verifying signature of bytes: ", message)
 	publicKey := signingKey.PublicKey()
 	valid := verify(publicKey, message, &signature)
-	logger.Debug("Signature valid: ", valid)
+	//logger.Debug("Signature valid: ", valid)
 	return valid
 }
 
