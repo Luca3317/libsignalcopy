@@ -202,7 +202,7 @@ func ReadIdentityKeyPair() (pub []byte, priv []byte, err error) {
 	return pub, priv, nil
 }
 
-func ReadIdentityKeyPair2() identity.KeyPair {
+func ReadIdentityKeyPair() identity.KeyPair {
 	var pub, priv []byte
 	Readfile(&pub, idkeypubpath)
 	Readfile(&priv, idkeyprivpath)
@@ -229,35 +229,8 @@ func CreateBundleRaw() (RetrievableRaw, error) {
 		return RetrievableRaw{}, err
 	}
 
-	idkeypair := ReadIdentityKeyPair2()
+	idkeypair := ReadIdentityKeyPair()
 	signedprekey, err := CreateSignedPreKey(idkeypair)
-	if err != nil {
-		return RetrievableRaw{}, err
-	}
-
-	return RetrievableRaw{
-		Ids:                 ids,
-		PreKey:              prekey,
-		SignedPreKey:        signedprekey,
-		IdentityKeyPairPub:  pub,
-		IdentityKeyPairPriv: priv,
-	}, nil
-}
-
-func ReadBundleRaw() (RetrievableRaw, error) {
-	ids := ReadIDs()
-
-	prekey, err := ReadPreKey()
-	if err != nil {
-		return RetrievableRaw{}, err
-	}
-
-	pub, priv, err := ReadIdentityKeyPair()
-	if err != nil {
-		return RetrievableRaw{}, err
-	}
-
-	signedprekey, err := ReadSignedPreKey()
 	if err != nil {
 		return RetrievableRaw{}, err
 	}
@@ -283,7 +256,7 @@ func ReadBundle() (Retrievable, error) {
 		return Retrievable{}, err
 	}
 
-	idkeypair := ReadIdentityKeyPair2()
+	idkeypair := ReadIdentityKeyPair()
 	if err != nil {
 		return Retrievable{}, err
 	}
