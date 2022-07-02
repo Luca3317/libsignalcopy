@@ -1,5 +1,9 @@
 package record
 
+/*
+* Fixed bug in serialization which would duplicate leading key identifier	
+*/
+
 import (
 	"github.com/Luca3317/libsignalcopy/ecc"
 	"github.com/Luca3317/libsignalcopy/util/bytehelper"
