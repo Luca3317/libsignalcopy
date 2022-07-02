@@ -1,7 +1,7 @@
 package retrievable
 
 /*
-*	Whole package created f
+*	Whole package created for thesis
 */
 
 import (
