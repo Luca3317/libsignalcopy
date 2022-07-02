@@ -6,7 +6,7 @@
 libsignal-protocol-go
 =====================
 
-Libsignal-protocol-go is a Go implementation of the Signal Client Protocol.
+Libsignal-protocol-go is a Go implementation of the Signal Client Protocol..
 
 
 Documentation
