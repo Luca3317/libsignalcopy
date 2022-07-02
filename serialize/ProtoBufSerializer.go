@@ -1,5 +1,9 @@
 package serialize
 
+/*
+* Taken from https://github.com/crossle/libsignal-protocol-go
+*/
+
 import (
 	"fmt"
 	"strconv"
