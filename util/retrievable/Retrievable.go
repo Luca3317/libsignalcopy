@@ -1,5 +1,9 @@
 package retrievable
 
+/*
+*	Whole package created f
+*/
+
 import (
 	"bytes"
 	"encoding/gob"
@@ -21,12 +25,8 @@ const idspath = "ids.bin"
 const prekeypath = "prekey.bin"
 const sigprekeypath = "sigprekey.bin"
 
-const idkeypairpath = "idkeypair.bin"
 const idkeypubpath = "idkeypub.bin"
 const idkeyprivpath = "idkeypriv.bin"
-
-const libp2pkeypubpath = "libp2pkeypub.bin"
-const libp2pkeyprivpath = "libp2pkeypriv.bin"
 
 type IDs struct {
 	RegID uint32
